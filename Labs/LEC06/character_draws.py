@@ -2,6 +2,9 @@ from os.path import abspath, dirname, join
 import math
 from pico2d import *
 
+CANVAS_WIDTH = 800
+CANVAS_HEIGHT = 600
+
 open_canvas(800, 600)
 
 # 어떤 이유에서인지 character.png 파일이 제대로 불러와지지 않아
