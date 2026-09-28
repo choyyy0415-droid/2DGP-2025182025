@@ -72,7 +72,23 @@ def move_rectangle():
 
 
 def move_triangle():
-    pass
+    for i in range(101):
+        t = i / 100
+        x = 400 + (750 - 400) * t
+        y = 550 + (50 - 550) * t
+        draw_boy(x, y)
+
+    for i in range(101):
+        t = i / 100
+        x = 750 + (50 - 750) * t
+        y = 50
+        draw_boy(x, y)
+
+    for i in range(101):
+        t = i / 100
+        x = 50 + (400 - 50) * t
+        y = 50 + (550 - 50) * t
+        draw_boy(x, y)
 
 
 while True:
