@@ -73,6 +73,7 @@ def move_rectangle():
 
 
 def move_triangle():
+    print('triangle')
     for i in range(101):
         t = i / 100
         x = 400 + (750 - 400) * t
