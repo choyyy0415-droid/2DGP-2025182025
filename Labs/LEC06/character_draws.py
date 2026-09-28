@@ -77,7 +77,7 @@ def move_line(x1, y1, x2, y2):
         t = i / 100
         x = x1 + (x2 - x1) * t
         y = y1 + (y2 - y1) * t
-        pass
+        draw_boy(x, y)
 
 
 def move_triangle():
