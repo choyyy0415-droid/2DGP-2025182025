@@ -20,7 +20,15 @@ y = 300 + 200 * math.sin(theta)
 
 
 def move_circle():
-    pass
+    for degree in range(360):
+        theta = math.radians(degree)
+        x = 400 + 200 * math.cos(theta)
+        y = 300 + 200 * math.sin(theta)
+
+        clear_canvas()
+        boy.draw(x, y)
+        update_canvas()
+        delay(0.01)
 
 
 def move_rectangle():
