@@ -4,6 +4,8 @@ from pico2d import *
 
 CANVAS_WIDTH = 800
 CANVAS_HEIGHT = 600
+CENTER_X = 400
+CENTER_Y = 300
 
 open_canvas(CANVAS_WIDTH, CANVAS_HEIGHT)
 
