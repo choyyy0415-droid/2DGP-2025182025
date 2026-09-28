@@ -37,21 +37,29 @@ def move_circle():
 
 def move_top():
     print('top')
+    for x in range(50, 751, 5):
+        draw_boy(x, 550)
     pass
 
 
 def move_right():
     print('right')
+    for y in range(550, 49, -5):
+        draw_boy(750, y)
     pass
 
 
 def move_bottom():
     print('bottom')
+    for x in range(750, 49, -5):
+        draw_boy(x, 50)
     pass
 
 
 def move_left():
     print('left')
+    for y in range(50, 551, 5):
+        draw_boy(50, y)
     pass
 
 
