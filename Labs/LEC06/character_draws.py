@@ -84,11 +84,7 @@ def move_triangle():
     print('triangle')
     move_line(400, 550, 750, 50)
 
-    for i in range(101):
-        t = i / 100
-        x = 750 + (50 - 750) * t
-        y = 50
-        draw_boy(x, y)
+    move_line(750, 50, 50, 50)
 
     for i in range(101):
         t = i / 100
