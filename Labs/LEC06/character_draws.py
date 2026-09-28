@@ -24,16 +24,16 @@ def draw_boy(x, y):
 
 degree = 0
 theta = math.radians(degree)
-x = 400 + 200 * math.cos(theta)
-y = 300 + 200 * math.sin(theta)
+x = CENTER_X + 200 * math.cos(theta)
+y = CENTER_Y + 200 * math.sin(theta)
 
 
 def move_circle():
     print('circle')
     for degree in range(360):
         theta = math.radians(degree)
-        x = 400 + 200 * math.cos(theta)
-        y = 300 + 200 * math.sin(theta)
+        x = CENTER_X + 200 * math.cos(theta)
+        y = CENTER_Y + 200 * math.sin(theta)
 
         clear_canvas()
         boy.draw(x, y)
