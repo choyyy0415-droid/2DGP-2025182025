@@ -1,4 +1,5 @@
 from os.path import abspath, dirname, join
+import math
 from pico2d import *
 
 open_canvas(800, 600)
@@ -11,6 +12,11 @@ clear_canvas()
 boy.draw(400, 300)
 update_canvas()
 delay(1)
+
+degree = 0
+theta = math.radians(degree)
+x = 400 + 200 * math.cos(theta)
+y = 300 + 200 * math.sin(theta)
 
 
 def move_circle():
