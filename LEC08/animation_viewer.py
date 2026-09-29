@@ -86,6 +86,15 @@ def update_pause(player):
     return True
 
 
+def change_action_after_pause(player):
+    if get_time() - player.pause_started < PAUSE_SECONDS:
+        return
+    player.action_index = (player.action_index + 1) % len(ACTIONS)
+    player.frame = 0
+    player.loops = 0
+    player.pause_started = None
+
+
 def main():
     open_canvas(900, 600)
     close_canvas()
