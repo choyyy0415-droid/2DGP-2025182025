@@ -38,6 +38,16 @@ def handle_events():
     return True
 
 
+def move_forward(player, speed):
+    player.x += speed * player.direction
+    if player.x > WIDTH - 120:
+        player.x = WIDTH - 120
+        player.direction = -1
+    elif player.x < 120:
+        player.x = 120
+        player.direction = 1
+
+
 def main():
     open_canvas(900, 600)
     close_canvas()
