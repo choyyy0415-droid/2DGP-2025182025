@@ -104,6 +104,18 @@ def update_player(player):
     advance_frame(player)
 
 
+def draw_scene(player, character, background):
+    clear_canvas()
+    background.draw(WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT)
+    bob = (0, 5, 10, 5, 0, 5, 10, 5)[player.frame]
+    angle = (-0.04, -0.02, 0, 0.02, 0.04, 0.02, 0, -0.02)[player.frame]
+    flip = "h" if player.direction < 0 else ""
+    character.composite_draw(angle, flip,
+                             player.x + attack_lunge(player), player.y + bob,
+                             210, 480)
+    update_canvas()
+
+
 def main():
     open_canvas(900, 600)
     close_canvas()
