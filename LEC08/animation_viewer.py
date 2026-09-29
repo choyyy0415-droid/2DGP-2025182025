@@ -24,6 +24,10 @@ class Player:
         self.loops = 0
         self.pause_started = None
 
+    @property
+    def action(self):
+        return ACTIONS[self.action_index]
+
 
 def main():
     open_canvas(900, 600)
