@@ -78,6 +78,14 @@ def advance_frame(player):
         player.loops += 1
 
 
+def update_pause(player):
+    if player.loops < REPEAT_COUNT:
+        return False
+    if player.pause_started is None:
+        player.pause_started = get_time()
+    return True
+
+
 def main():
     open_canvas(900, 600)
     close_canvas()
