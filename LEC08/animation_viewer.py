@@ -55,6 +55,15 @@ def update_walk_and_run(player):
         move_forward(player, 8)
 
 
+def update_jump(player):
+    if player.action != "jump":
+        player.y = GROUND_Y
+        return
+    progress = player.frame / (FRAME_COUNT - 1)
+    player.y = GROUND_Y + 230 * 4 * progress * (1 - progress)
+    move_forward(player, 5)
+
+
 def main():
     open_canvas(900, 600)
     close_canvas()
