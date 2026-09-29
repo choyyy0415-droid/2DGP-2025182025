@@ -6,7 +6,25 @@ grass = load_image('grass.png')
 character = load_image('run_animation.png')
 
 # fill here
+frame = 0
+for x in range(800, 0, -5):
+    clear_canvas()
+    grass.draw(400, 30)
+    character.clip_draw(frame * 100, 0, 100, 100, x, 90)
+    update_canvas()
+    frame = (frame + 1) % 8
+    delay(0.05)
 
-
+# 2. 왼쪽에서 오른쪽으로 이동 (오른쪽 바라보기)
+for x in range(0, 800, 5):
+    clear_canvas()
+    grass.draw(400, 30)
+    character.clip_composite_draw(frame * 100, 100, 100, 100, 0, '', x, 90)
+    update_canvas()
+    frame = (frame + 1) % 8
+    delay(0.05)  
+    update_canvas()
+    frame = (frame + 1) % 8
+    delay(0.05)
 close_canvas()
 
