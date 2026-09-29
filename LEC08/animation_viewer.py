@@ -6,10 +6,17 @@ WIDTH, HEIGHT = 900, 600
 FPS = 12
 GROUND_Y = 285
 ROOT = Path(__file__).parents[1]
-CHARACTER_PATH = ROOT / "LEC05" / "character.png"
-BACKGROUND_PATH = ROOT / "LEC05" / "grass.png"
+SHEET_PATH = Path(__file__).with_name("SamuraiSheet.png")
+BACKGROUND_PATH = Path(__file__).with_name("TUK_GROUND.png")
 ACTIONS = ("walk", "run", "jump", "attack")
-FRAME_COUNT = 8
+CELL_SIZE = 128
+DRAW_SIZE = 340
+ANIMATIONS = {
+    "walk": {"row": 8, "frames": 8, "speed": 3},
+    "run": {"row": 7, "frames": 8, "speed": 8},
+    "jump": {"row": 6, "frames": 12, "speed": 5},
+    "attack": {"row": 5, "frames": 6, "speed": 0},
+}
 REPEAT_COUNT = 5
 PAUSE_SECONDS = 1.0
 
@@ -50,30 +57,31 @@ def move_forward(player, speed):
 
 def update_walk_and_run(player):
     if player.action == "walk":
-        move_forward(player, 3)
+        move_forward(player, ANIMATIONS["walk"]["speed"])
     elif player.action == "run":
-        move_forward(player, 8)
+        move_forward(player, ANIMATIONS["run"]["speed"])
 
 
 def update_jump(player):
     if player.action != "jump":
         player.y = GROUND_Y
         return
-    progress = player.frame / (FRAME_COUNT - 1)
+    frame_count = ANIMATIONS["jump"]["frames"]
+    progress = player.frame / (frame_count - 1)
     player.y = GROUND_Y + 230 * 4 * progress * (1 - progress)
-    move_forward(player, 5)
+    move_forward(player, ANIMATIONS["jump"]["speed"])
 
 
 def attack_lunge(player):
     if player.action != "attack":
         return 0
-    distances = (0, 10, 25, 55, 75, 45, 20, 0)
+    distances = (0, 15, 40, 75, 35, 0)
     return distances[player.frame] * player.direction
 
 
 def advance_frame(player):
     player.frame += 1
-    if player.frame == FRAME_COUNT:
+    if player.frame == ANIMATIONS[player.action]["frames"]:
         player.frame = 0
         player.loops += 1
 
@@ -104,27 +112,33 @@ def update_player(player):
     advance_frame(player)
 
 
-def draw_scene(player, character, background):
+def draw_character(player, sprite_sheet):
+    flip = "h" if player.direction < 0 else ""
+    animation = ANIMATIONS[player.action]
+    sprite_sheet.clip_composite_draw(
+        player.frame * CELL_SIZE, animation["row"] * CELL_SIZE,
+        CELL_SIZE, CELL_SIZE, 0, flip,
+        player.x + attack_lunge(player), player.y,
+        DRAW_SIZE, DRAW_SIZE,
+    )
+
+
+def draw_scene(player, sprite_sheet, background):
     clear_canvas()
     background.draw(WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT)
-    bob = (0, 5, 10, 5, 0, 5, 10, 5)[player.frame]
-    angle = (-0.04, -0.02, 0, 0.02, 0.04, 0.02, 0, -0.02)[player.frame]
-    flip = "h" if player.direction < 0 else ""
-    character.composite_draw(angle, flip,
-                             player.x + attack_lunge(player), player.y + bob,
-                             210, 480)
+    draw_character(player, sprite_sheet)
     update_canvas()
 
 
 def main():
     open_canvas(WIDTH, HEIGHT)
     try:
-        character = load_image(str(CHARACTER_PATH))
+        sprite_sheet = load_image(str(SHEET_PATH))
         background = load_image(str(BACKGROUND_PATH))
         player = Player()
         while handle_events():
             update_player(player)
-            draw_scene(player, character, background)
+            draw_scene(player, sprite_sheet, background)
             delay(1.0 / FPS)
     finally:
         close_canvas()
