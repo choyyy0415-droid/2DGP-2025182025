@@ -8,6 +8,10 @@ GROUND_Y = 285
 ROOT = Path(__file__).parents[1]
 CHARACTER_PATH = ROOT / "LEC05" / "character.png"
 BACKGROUND_PATH = ROOT / "LEC05" / "grass.png"
+ACTIONS = ("walk", "run", "jump", "attack")
+FRAME_COUNT = 8
+REPEAT_COUNT = 5
+PAUSE_SECONDS = 1.0
 
 
 def main():
