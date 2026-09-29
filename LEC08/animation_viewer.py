@@ -64,6 +64,13 @@ def update_jump(player):
     move_forward(player, 5)
 
 
+def attack_lunge(player):
+    if player.action != "attack":
+        return 0
+    distances = (0, 10, 25, 55, 75, 45, 20, 0)
+    return distances[player.frame] * player.direction
+
+
 def main():
     open_canvas(900, 600)
     close_canvas()
