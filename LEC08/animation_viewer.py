@@ -14,6 +14,17 @@ REPEAT_COUNT = 5
 PAUSE_SECONDS = 1.0
 
 
+class Player:
+    def __init__(self):
+        self.x = WIDTH / 2
+        self.y = GROUND_Y
+        self.direction = 1
+        self.action_index = 0
+        self.frame = 0
+        self.loops = 0
+        self.pause_started = None
+
+
 def main():
     open_canvas(900, 600)
     close_canvas()
