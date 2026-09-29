@@ -117,7 +117,14 @@ def draw_scene(player, character, background):
 
 
 def main():
-    open_canvas(900, 600)
+    open_canvas(WIDTH, HEIGHT)
+    character = load_image(str(CHARACTER_PATH))
+    background = load_image(str(BACKGROUND_PATH))
+    player = Player()
+    while handle_events():
+        update_player(player)
+        draw_scene(player, character, background)
+        delay(1.0 / FPS)
     close_canvas()
 
 
