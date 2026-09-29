@@ -71,6 +71,13 @@ def attack_lunge(player):
     return distances[player.frame] * player.direction
 
 
+def advance_frame(player):
+    player.frame += 1
+    if player.frame == FRAME_COUNT:
+        player.frame = 0
+        player.loops += 1
+
+
 def main():
     open_canvas(900, 600)
     close_canvas()
