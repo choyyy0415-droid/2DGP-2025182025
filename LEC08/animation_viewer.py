@@ -29,6 +29,15 @@ class Player:
         return ACTIONS[self.action_index]
 
 
+def handle_events():
+    for event in get_events():
+        if event.type == SDL_QUIT:
+            return False
+        if event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
+            return False
+    return True
+
+
 def main():
     open_canvas(900, 600)
     close_canvas()
