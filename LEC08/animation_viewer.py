@@ -48,6 +48,13 @@ def move_forward(player, speed):
         player.direction = 1
 
 
+def update_walk_and_run(player):
+    if player.action == "walk":
+        move_forward(player, 3)
+    elif player.action == "run":
+        move_forward(player, 8)
+
+
 def main():
     open_canvas(900, 600)
     close_canvas()
