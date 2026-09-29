@@ -95,6 +95,15 @@ def change_action_after_pause(player):
     player.pause_started = None
 
 
+def update_player(player):
+    if update_pause(player):
+        change_action_after_pause(player)
+        return
+    update_walk_and_run(player)
+    update_jump(player)
+    advance_frame(player)
+
+
 def main():
     open_canvas(900, 600)
     close_canvas()
