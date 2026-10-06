@@ -7,6 +7,12 @@ IDLE_ROWS = {'right': 300, 'left': 200}
 RUN_ROWS = {'right': 100, 'left': 0}
 
 
+def handle_events(state, pressed):
+    for event in get_events():
+        if event.type == SDL_QUIT:
+            state['running'] = False
+
+
 def main():
     open_canvas(TUK_WIDTH, TUK_HEIGHT)
     tuk_ground = load_image('TUK_GROUND.png')
