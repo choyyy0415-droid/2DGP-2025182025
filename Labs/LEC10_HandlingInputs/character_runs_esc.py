@@ -16,6 +16,8 @@ def handle_events(state, pressed):
                 state['running'] = False
             elif event.key in pressed:
                 pressed[event.key] = True
+        elif event.type == SDL_KEYUP and event.key in pressed:
+            pressed[event.key] = False
 
 
 def main():
