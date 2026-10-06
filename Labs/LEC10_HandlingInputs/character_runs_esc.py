@@ -31,6 +31,10 @@ def update_position(state, pressed):
 
     state['x'] += dx * MOVE_SPEED
     state['y'] += dy * MOVE_SPEED
+
+    half = SPRITE_SIZE // 2
+    state['x'] = max(half, min(TUK_WIDTH - half, state['x']))
+    state['y'] = max(half, min(TUK_HEIGHT - half, state['y']))
     return dx, dy
 
 
