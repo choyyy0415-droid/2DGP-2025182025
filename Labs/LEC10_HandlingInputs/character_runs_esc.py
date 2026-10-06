@@ -11,6 +11,11 @@ def handle_events(state, pressed):
     for event in get_events():
         if event.type == SDL_QUIT:
             state['running'] = False
+        elif event.type == SDL_KEYDOWN:
+            if event.key == SDLK_ESCAPE:
+                state['running'] = False
+            elif event.key in pressed:
+                pressed[event.key] = True
 
 
 def main():
