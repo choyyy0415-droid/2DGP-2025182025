@@ -24,6 +24,11 @@ def update_position(state, pressed):
     dx = int(pressed[SDLK_RIGHT]) - int(pressed[SDLK_LEFT])
     dy = int(pressed[SDLK_UP]) - int(pressed[SDLK_DOWN])
 
+    if dx > 0:
+        state['facing'] = 'right'
+    elif dx < 0:
+        state['facing'] = 'left'
+
     state['x'] += dx * MOVE_SPEED
     state['y'] += dy * MOVE_SPEED
     return dx, dy
