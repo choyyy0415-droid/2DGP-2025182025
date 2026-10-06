@@ -12,6 +12,14 @@ def main():
     tuk_ground = load_image('TUK_GROUND.png')
     character = load_image('animation_sheet.png')
 
+    state = {
+        'running': True,
+        'x': TUK_WIDTH // 2,
+        'y': TUK_HEIGHT // 2,
+        'facing': 'right',
+        'frame': 0,
+    }
+
     close_canvas()
 
 
