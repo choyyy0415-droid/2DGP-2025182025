@@ -71,7 +71,18 @@ def main():
         SDLK_DOWN: False,
     }
 
-    close_canvas()
+    try:
+        while state['running']:
+            handle_events(state, pressed)
+            dx, dy = update_position(state, pressed)
+
+            clear_canvas()
+            tuk_ground.draw(TUK_WIDTH // 2, TUK_HEIGHT // 2)
+            draw_character(character, state, dx != 0 or dy != 0)
+            update_canvas()
+            delay(0.05)
+    finally:
+        close_canvas()
 
 
 if __name__ == '__main__':
