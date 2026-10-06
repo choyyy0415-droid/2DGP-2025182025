@@ -20,6 +20,15 @@ def handle_events(state, pressed):
             pressed[event.key] = False
 
 
+def update_position(state, pressed):
+    dx = int(pressed[SDLK_RIGHT]) - int(pressed[SDLK_LEFT])
+    dy = int(pressed[SDLK_UP]) - int(pressed[SDLK_DOWN])
+
+    state['x'] += dx * MOVE_SPEED
+    state['y'] += dy * MOVE_SPEED
+    return dx, dy
+
+
 def main():
     open_canvas(TUK_WIDTH, TUK_HEIGHT)
     tuk_ground = load_image('TUK_GROUND.png')
