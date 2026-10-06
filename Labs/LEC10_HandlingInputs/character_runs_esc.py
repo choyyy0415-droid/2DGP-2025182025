@@ -38,6 +38,20 @@ def update_position(state, pressed):
     return dx, dy
 
 
+def draw_character(character, state, moving):
+    rows = RUN_ROWS if moving else IDLE_ROWS
+    bottom = rows[state['facing']]
+    character.clip_draw(
+        state['frame'] * SPRITE_SIZE,
+        bottom,
+        SPRITE_SIZE,
+        SPRITE_SIZE,
+        state['x'],
+        state['y'],
+    )
+    state['frame'] = (state['frame'] + 1) % 8
+
+
 def main():
     open_canvas(TUK_WIDTH, TUK_HEIGHT)
     tuk_ground = load_image('TUK_GROUND.png')
