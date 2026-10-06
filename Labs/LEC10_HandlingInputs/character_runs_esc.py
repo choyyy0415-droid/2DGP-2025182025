@@ -19,6 +19,12 @@ def main():
         'facing': 'right',
         'frame': 0,
     }
+    pressed = {
+        SDLK_LEFT: False,
+        SDLK_RIGHT: False,
+        SDLK_UP: False,
+        SDLK_DOWN: False,
+    }
 
     close_canvas()
 
