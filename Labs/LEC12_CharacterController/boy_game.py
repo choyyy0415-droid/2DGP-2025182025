@@ -21,3 +21,13 @@ class Grass:
         self.image.draw(400, 30)
 
 
+class AutoRun:
+    DURATION = 5.0
+    SPEED = 400
+    SIZE = 150
+
+    @staticmethod
+    def enter(boy):
+        boy.auto_started = get_time()
+
+
