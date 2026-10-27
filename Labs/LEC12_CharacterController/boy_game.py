@@ -48,3 +48,10 @@ class AutoRun:
                 boy.face_dir = 1
 
 
+    @staticmethod
+    def draw(boy):
+        row = 100 if boy.face_dir == 1 else 0
+        boy.image.clip_draw(int(boy.frame) * 100, row, 100, 100,
+                            boy.x, 115, AutoRun.SIZE, AutoRun.SIZE)
+
+
