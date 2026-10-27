@@ -117,3 +117,14 @@ class Boy:
                 self.stop_run()
 
 
+    def update(self, dt):
+        if self.state == 'IDLE' and get_time() - self.idle_started >= 5.0:
+            self.time_out()
+        if self.state != 'SLEEP':
+            self.frame = (self.frame + 10 * dt) % 8
+        if self.state == 'AUTO_RUN':
+            AutoRun.update(self, dt)
+        elif self.state == 'RUN':
+            self.x = max(50, min(750, self.x + self.face_dir * 200 * dt))
+
+
