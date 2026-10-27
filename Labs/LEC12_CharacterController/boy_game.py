@@ -55,3 +55,30 @@ class AutoRun:
                             boy.x, 115, AutoRun.SIZE, AutoRun.SIZE)
 
 
+class Boy:
+    image = None
+
+    def __init__(self):
+        self.x, self.y = 400, 90
+        self.frame = 0.0
+        self.face_dir = 1
+        self.keys = []
+        if Boy.image is None:
+            Boy.image = load_image(str(Path(__file__).with_name('animation_sheet.png')))
+        self.machine = Machine(
+            model=self, states=['IDLE', 'SLEEP', 'RUN',
+                                {'name': 'AUTO_RUN', 'on_enter': 'enter_auto'}], initial='IDLE',
+            auto_transitions=False,
+            after_state_change='enter_state',
+            transitions=[
+                ['time_out', 'IDLE', 'SLEEP'],
+                ['wake_up', 'SLEEP', 'IDLE'],
+                ['start_run', ['IDLE', 'SLEEP', 'AUTO_RUN'], 'RUN'],
+                ['stop_run', 'RUN', 'IDLE'],
+                ['start_auto', 'IDLE', 'AUTO_RUN'],
+                ['finish_auto', 'AUTO_RUN', 'IDLE'],
+            ],
+        )
+        self.enter_state()
+
+
