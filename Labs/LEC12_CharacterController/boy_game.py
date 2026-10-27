@@ -157,3 +157,9 @@ def handle_events():
             boy.handle_event(event)
 
 
+def reset_world():
+    global world, boy
+    boy = Boy()
+    world = [Grass(), boy]
+
+
