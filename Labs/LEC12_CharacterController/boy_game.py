@@ -95,3 +95,25 @@ class Boy:
         AutoRun.enter(self)
 
 
+    def handle_event(self, event):
+        if event.type == SDL_KEYDOWN and event.key == SDLK_a:
+            if self.state == 'IDLE':
+                self.start_auto()
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_SPACE:
+            if self.state == 'SLEEP':
+                self.wake_up()
+        elif event.type in (SDL_KEYDOWN, SDL_KEYUP) and event.key in (SDLK_LEFT, SDLK_RIGHT):
+            if event.type == SDL_KEYDOWN:
+                if event.key not in self.keys:
+                    self.keys.append(event.key)
+            elif event.key in self.keys:
+                self.keys.remove(event.key)
+            # 두 키를 누르면 나중에 누른 방향을 따른다.
+            if self.keys:
+                self.face_dir = -1 if self.keys[-1] == SDLK_LEFT else 1
+                if self.state != 'RUN':
+                    self.start_run()
+            elif self.state == 'RUN':
+                self.stop_run()
+
+
