@@ -175,3 +175,22 @@ def render_world():
     update_canvas()
 
 
+def main():
+    global running
+    open_canvas(800, 600)
+    try:
+        reset_world()
+        running = True
+        previous = get_time()
+        while running:
+            now = get_time()
+            dt = min(now - previous, 0.1)
+            previous = now
+            handle_events()
+            update_world(dt)
+            render_world()
+            delay(0.01)
+    finally:
+        close_canvas()
+
+
