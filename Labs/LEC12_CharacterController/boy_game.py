@@ -168,3 +168,10 @@ def update_world(dt):
         obj.update(dt)
 
 
+def render_world():
+    clear_canvas()
+    for obj in world:
+        obj.draw()
+    update_canvas()
+
+
