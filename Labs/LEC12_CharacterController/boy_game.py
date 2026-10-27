@@ -89,3 +89,9 @@ class Boy:
             self.x = max(50, min(750, self.x))
 
 
+    def enter_auto(self):
+        self.keys.clear()
+        self.x = max(75, min(725, self.x))
+        AutoRun.enter(self)
+
+
