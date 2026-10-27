@@ -31,3 +31,20 @@ class AutoRun:
         boy.auto_started = get_time()
 
 
+    @staticmethod
+    def update(boy, dt):
+        if get_time() - boy.auto_started >= AutoRun.DURATION:
+            boy.finish_auto()
+            return
+        # 남은 이동 거리까지 반사해 프레임 속도와 무관하게 왕복한다.
+        left, right = AutoRun.SIZE / 2, 800 - AutoRun.SIZE / 2
+        boy.x += boy.face_dir * AutoRun.SPEED * dt
+        while boy.x < left or boy.x > right:
+            if boy.x > right:
+                boy.x = 2 * right - boy.x
+                boy.face_dir = -1
+            elif boy.x < left:
+                boy.x = 2 * left - boy.x
+                boy.face_dir = 1
+
+
