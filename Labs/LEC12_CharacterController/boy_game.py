@@ -128,3 +128,17 @@ class Boy:
             self.x = max(50, min(750, self.x + self.face_dir * 200 * dt))
 
 
+    def draw(self):
+        if self.state == 'AUTO_RUN':
+            AutoRun.draw(self)
+        if self.state == 'RUN':
+            row = 100 if self.face_dir == 1 else 0
+        else:
+            row = 300 if self.face_dir == 1 else 200
+        if self.state == 'SLEEP':
+            self.image.clip_composite_draw(0, row, 100, 100,
+                                           -pi / 2 * self.face_dir, '', self.x, 65, 100, 100)
+        elif self.state != 'AUTO_RUN':
+            self.image.clip_draw(int(self.frame) * 100, row, 100, 100, self.x, self.y)
+
+
