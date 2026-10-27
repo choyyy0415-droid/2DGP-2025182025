@@ -142,3 +142,7 @@ class Boy:
             self.image.clip_draw(int(self.frame) * 100, row, 100, 100, self.x, self.y)
 
 
+running = False
+world = []
+boy = None
+
