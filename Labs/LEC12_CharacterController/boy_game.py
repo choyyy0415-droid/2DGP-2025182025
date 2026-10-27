@@ -7,3 +7,17 @@ from pico2d import (open_canvas, close_canvas, get_events, get_time,
 from transitions import Machine
 
 
+class Grass:
+    image = None
+
+    def __init__(self):
+        if Grass.image is None:
+            Grass.image = load_image(str(Path(__file__).with_name('grass.png')))
+
+    def update(self, dt):
+        pass
+
+    def draw(self):
+        self.image.draw(400, 30)
+
+
