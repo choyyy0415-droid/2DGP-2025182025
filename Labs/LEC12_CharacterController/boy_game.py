@@ -82,3 +82,10 @@ class Boy:
         self.enter_state()
 
 
+    def enter_state(self):
+        self.frame = 0.0
+        self.idle_started = get_time()
+        if self.state != 'AUTO_RUN':
+            self.x = max(50, min(750, self.x))
+
+
