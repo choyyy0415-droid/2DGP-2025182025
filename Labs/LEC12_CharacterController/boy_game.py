@@ -30,7 +30,6 @@ class AutoRun:
     def enter(boy):
         boy.auto_started = get_time()
 
-
     @staticmethod
     def update(boy, dt):
         if get_time() - boy.auto_started >= AutoRun.DURATION:
@@ -46,7 +45,6 @@ class AutoRun:
             elif boy.x < left:
                 boy.x = 2 * left - boy.x
                 boy.face_dir = 1
-
 
     @staticmethod
     def draw(boy):
@@ -81,19 +79,16 @@ class Boy:
         )
         self.enter_state()
 
-
     def enter_state(self):
         self.frame = 0.0
         self.idle_started = get_time()
         if self.state != 'AUTO_RUN':
             self.x = max(50, min(750, self.x))
 
-
     def enter_auto(self):
         self.keys.clear()
         self.x = max(75, min(725, self.x))
         AutoRun.enter(self)
-
 
     def handle_event(self, event):
         if event.type == SDL_KEYDOWN and event.key == SDLK_a:
@@ -116,7 +111,6 @@ class Boy:
             elif self.state == 'RUN':
                 self.stop_run()
 
-
     def update(self, dt):
         if self.state == 'IDLE' and get_time() - self.idle_started >= 5.0:
             self.time_out()
@@ -126,7 +120,6 @@ class Boy:
             AutoRun.update(self, dt)
         elif self.state == 'RUN':
             self.x = max(50, min(750, self.x + self.face_dir * 200 * dt))
-
 
     def draw(self):
         if self.state == 'AUTO_RUN':
@@ -142,9 +135,11 @@ class Boy:
             self.image.clip_draw(int(self.frame) * 100, row, 100, 100, self.x, self.y)
 
 
+
 running = False
 world = []
 boy = None
+
 
 def handle_events():
     global running
@@ -196,4 +191,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
