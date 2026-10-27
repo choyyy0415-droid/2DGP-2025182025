@@ -163,3 +163,8 @@ def reset_world():
     world = [Grass(), boy]
 
 
+def update_world(dt):
+    for obj in world:
+        obj.update(dt)
+
+
