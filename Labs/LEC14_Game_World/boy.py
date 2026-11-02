@@ -1,4 +1,8 @@
+from pathlib import Path
 from math import pi
+
+import game_world
+from ball import Ball
 
 from pico2d import get_canvas_width, get_time, load_image
 from sdl2 import (SDL_KEYDOWN, SDL_KEYUP, SDLK_LEFT, SDLK_RIGHT,
@@ -8,9 +12,9 @@ from transitions import Machine
 
 class Boy:
     def __init__(self):
-        self.x, self.y = 400, 90
+        self.x, self.y = 400, 50
         self.frame = 0
-        self.image = load_image('animation_sheet.png')
+        self.image = load_image(str(Path(__file__).with_name('animation_sheet.png')))
         self.idle_started_at = get_time()
         self.dir = 0
         self.face_dir = 1
@@ -44,10 +48,11 @@ class Boy:
         self.frame = 0
 
     def handle_event(self, event):
-        if (event.type == SDL_KEYDOWN and
-                event.key == SDLK_SPACE and
-                self.state == 'SLEEP'):
-            self.wake_up()
+        if event.type == SDL_KEYDOWN and event.key == SDLK_SPACE:
+            if self.state == 'SLEEP':
+                self.wake_up()
+            elif self.state in ('IDLE', 'RUN'):
+                self.fire_ball()
             return
 
         if (event.type not in (SDL_KEYDOWN, SDL_KEYUP) or
@@ -70,6 +75,14 @@ class Boy:
         elif self.state == 'RUN':
             self.dir = 0
             self.stop_run()
+
+    def fire_ball(self):
+        if self.state not in ('IDLE', 'RUN'):
+            return
+        ball = Ball(self.x + self.face_dir * 35, self.y, self.face_dir)
+        game_world.add_object(ball, game_world.FOREGROUND_LAYER)
+        direction = '오른쪽' if self.face_dir == 1 else '왼쪽'
+        print(f'{direction}으로 볼을 발사합니다.')
 
     def update(self):
         if self.state == 'IDLE':

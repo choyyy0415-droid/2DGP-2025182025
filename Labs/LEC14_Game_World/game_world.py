@@ -1,4 +1,12 @@
+BACKGROUND_LAYER = 0
+FOREGROUND_LAYER = 1
 world = [[], []] # layers for game objects
+
+
+def clear():
+    for layer in world:
+        layer.clear()
+
 
 def add_object(o, depth):
     world[depth].append(o)
@@ -17,12 +25,10 @@ def remove_object(o):
 
 def update():
     for layer in world:
-        for o in layer:
+        for o in layer[:]:
             o.update()
 
 def render():
     for layer in world:
         for o in layer:
             o.draw()
-
-

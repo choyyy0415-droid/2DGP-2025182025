@@ -1,84 +1,193 @@
-from pico2d import *
-import random
+from pathlib import Path
+from math import pi
+from pico2d import (open_canvas, close_canvas, get_events, get_time,
+                    clear_canvas, update_canvas, delay, load_image,
+                    SDL_QUIT, SDL_KEYDOWN, SDL_KEYUP, SDLK_ESCAPE,
+                    SDLK_LEFT, SDLK_RIGHT, SDLK_SPACE, SDLK_a)
+from transitions import Machine
 
-
-# Game object class here
 
 class Grass:
+    image = None
+
     def __init__(self):
-        self.image = load_image('grass.png')
+        if Grass.image is None:
+            Grass.image = load_image(str(Path(__file__).with_name('grass.png')))
+
+    def update(self, dt):
+        pass
 
     def draw(self):
         self.image.draw(400, 30)
 
-    def update(self):
-        pass
+
+class AutoRun:
+    DURATION = 5.0
+    SPEED = 400
+    SIZE = 150
+
+    @staticmethod
+    def enter(boy):
+        boy.auto_started = get_time()
+
+    @staticmethod
+    def update(boy, dt):
+        if get_time() - boy.auto_started >= AutoRun.DURATION:
+            boy.finish_auto()
+            return
+        # 남은 이동 거리까지 반사해 프레임 속도와 무관하게 왕복한다.
+        left, right = AutoRun.SIZE / 2, 800 - AutoRun.SIZE / 2
+        boy.x += boy.face_dir * AutoRun.SPEED * dt
+        while boy.x < left or boy.x > right:
+            if boy.x > right:
+                boy.x = 2 * right - boy.x
+                boy.face_dir = -1
+            elif boy.x < left:
+                boy.x = 2 * left - boy.x
+                boy.face_dir = 1
+
+    @staticmethod
+    def draw(boy):
+        row = 100 if boy.face_dir == 1 else 0
+        boy.image.clip_draw(int(boy.frame) * 100, row, 100, 100,
+                            boy.x, 115, AutoRun.SIZE, AutoRun.SIZE)
 
 
 class Boy:
+    image = None
+
     def __init__(self):
         self.x, self.y = 400, 90
-        self.frame = 0
+        self.frame = 0.0
         self.face_dir = 1
-        self.image = load_image('animation_sheet.png')
+        self.keys = []
+        if Boy.image is None:
+            Boy.image = load_image(str(Path(__file__).with_name('animation_sheet.png')))
+        self.machine = Machine(
+            model=self, states=['IDLE', 'SLEEP', 'RUN',
+                                {'name': 'AUTO_RUN', 'on_enter': 'enter_auto'}], initial='IDLE',
+            auto_transitions=False,
+            after_state_change='enter_state',
+            transitions=[
+                ['time_out', 'IDLE', 'SLEEP'],
+                ['wake_up', 'SLEEP', 'IDLE'],
+                ['start_run', ['IDLE', 'SLEEP', 'AUTO_RUN'], 'RUN'],
+                ['stop_run', 'RUN', 'IDLE'],
+                ['start_auto', 'IDLE', 'AUTO_RUN'],
+                ['finish_auto', 'AUTO_RUN', 'IDLE'],
+            ],
+        )
+        self.enter_state()
 
-    def update(self):
-        self.frame = (self.frame + 1) % 8
+    def enter_state(self):
+        self.frame = 0.0
+        self.idle_started = get_time()
+        if self.state != 'AUTO_RUN':
+            self.x = max(50, min(750, self.x))
+
+    def enter_auto(self):
+        self.keys.clear()
+        self.x = max(75, min(725, self.x))
+        AutoRun.enter(self)
+
+    def handle_event(self, event):
+        if event.type == SDL_KEYDOWN and event.key == SDLK_a:
+            if self.state == 'IDLE':
+                self.start_auto()
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_SPACE:
+            if self.state == 'SLEEP':
+                self.wake_up()
+        elif event.type in (SDL_KEYDOWN, SDL_KEYUP) and event.key in (SDLK_LEFT, SDLK_RIGHT):
+            if event.type == SDL_KEYDOWN:
+                if event.key not in self.keys:
+                    self.keys.append(event.key)
+            elif event.key in self.keys:
+                self.keys.remove(event.key)
+            # 두 키를 누르면 나중에 누른 방향을 따른다.
+            if self.keys:
+                self.face_dir = -1 if self.keys[-1] == SDLK_LEFT else 1
+                if self.state != 'RUN':
+                    self.start_run()
+            elif self.state == 'RUN':
+                self.stop_run()
+
+    def update(self, dt):
+        if self.state == 'IDLE' and get_time() - self.idle_started >= 5.0:
+            self.time_out()
+        if self.state != 'SLEEP':
+            self.frame = (self.frame + 10 * dt) % 8
+        if self.state == 'AUTO_RUN':
+            AutoRun.update(self, dt)
+        elif self.state == 'RUN':
+            self.x = max(50, min(750, self.x + self.face_dir * 200 * dt))
 
     def draw(self):
-        if self.face_dir == 1:
-            self.image.clip_draw(self.frame * 100, 300, 100, 100, self.x, self.y)
+        if self.state == 'AUTO_RUN':
+            AutoRun.draw(self)
+        if self.state == 'RUN':
+            row = 100 if self.face_dir == 1 else 0
         else:
-            self.image.clip_draw(self.frame * 100, 200, 100, 100, self.x, self.y)
+            row = 300 if self.face_dir == 1 else 200
+        if self.state == 'SLEEP':
+            self.image.clip_composite_draw(0, row, 100, 100,
+                                           -pi / 2 * self.face_dir, '', self.x, 65, 100, 100)
+        elif self.state != 'AUTO_RUN':
+            self.image.clip_draw(int(self.frame) * 100, row, 100, 100, self.x, self.y)
+
+
+
+running = False
+world = []
+boy = None
 
 
 def handle_events():
     global running
-
-    event_list = get_events()
-    for event in event_list:
+    for event in get_events():
         if event.type == SDL_QUIT:
             running = False
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             running = False
+        else:
+            boy.handle_event(event)
 
 
 def reset_world():
-    global world
-    global boy
-
-    world = []
-
-    grass = Grass()
-    world.append(grass)
-
+    global world, boy
     boy = Boy()
-    world.append(boy)
+    world = [Grass(), boy]
 
-
-
-def update_world():
-    for o in world:
-        o.update()
-    pass
+    
+def update_world(dt):
+    for obj in world:
+        obj.update(dt)
 
 
 def render_world():
     clear_canvas()
-    for o in world:
-        o.draw()
+    for obj in world:
+        obj.draw()
     update_canvas()
 
 
-running = True
+def main():
+    global running
+    open_canvas(800, 600)
+    try:
+        reset_world()
+        running = True
+        previous = get_time()
+        while running:
+            now = get_time()
+            dt = min(now - previous, 0.1)
+            previous = now
+            handle_events()
+            update_world(dt)
+            render_world()
+            delay(0.01)
+    finally:
+        close_canvas()
 
-open_canvas()
-reset_world()
-# game loop
-while running:
-    handle_events()
-    update_world()
-    render_world()
-    delay(0.01)
-# finalization code
-close_canvas()
+
+if __name__ == '__main__':
+    main()
